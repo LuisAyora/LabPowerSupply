@@ -21,11 +21,10 @@ void ADC_Init(void) {
 	ADMUX |= (1 << REFS0);
 	ADMUX &= ~(1 << REFS1);
 
-	// Set the clock source to 125 kHz, 
+	// Set the clock source to 125 kHz, Prescaler of 128
 	// Enable Auto Trigger, Interrupts and the ADC
-	ADCSRA |= ((1 << ADPS1) | (1 << ADPS0) | (1 << ADATE) | (1 << ADIE) 
-			  | (1 << ADEN));
-	ADCSRA &= ~(1 << ADPS2);
+	ADCSRA |= ((1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0) 
+			  | (1 << ADATE) | (1 << ADIE) | (1 << ADEN));
 
 	// Set the automatic trigger for TIMER/COUNTER0 compare match
 	ADCSRB |= ((1 << ADTS1) | (1 << ADTS0));
@@ -40,17 +39,5 @@ void ADC_In(void) {
 }
 
 ISR (ADC_vect) {
-	static uint8_t cnt = 0;
 	TIFR0 = (1 << OCF0A);
-
-	if ((cnt == 1)) {
-		if (ADC >= 512) {
-			PORTB |= (1 << PB1);
-		} else {
-			PORTB &= ~(1 << PB1);
-		}
-		cnt = 0;
-	} else {
-		cnt++;
-	}
 }

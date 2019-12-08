@@ -5,76 +5,35 @@
  * Author : Luis A Ayora
  */ 
 
-#define F_CPU 1000000UL
+#define F_CPU 16000000UL
 
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
+#include "TIMER0A.h"
 #include "ADC.h"
-
-ISR (INT0_vect) {
-	// static uint8_t LED = 0x00;
-	PORTB ^= (1 << PB0);
-}
-
-ISR (TIMER0_COMPA_vect) {
-	static uint8_t overflowCounter = 0;
-
-	if (overflowCounter == 1) {
-		PORTB ^= (1 << PB1);
-		overflowCounter = 0;
-	} else {
-		overflowCounter++;
-	}
-}
-
-void INT0_EnableOnFallingEdge(void) {
-	// Configure PD2 as an input pin:
-	DDRD &= ~(1 << PD2);
-
-	// Falling edge setup:
-	EICRA |= (1 << ISC01);
-	EICRA &= ~(1 << ISC00);
-
-	// Enable INT0 interrupt:
-	EIMSK |= (1 << INT0);
-}
-
-void OutputLEDConfigure(void) {
-	// Configure PB0 as output:
-	DDRB |= ((1 << PB0) | (1 << PB1));
-}
-
-void TIMER0_EnableOnCTC(void) {
-	// Configure Control Register A for normal port operation:
-	TCCR0A &= ~((1 << COM0A0) | (1 << COM0A1));
-
-	// Set up CTC mode:
-	TCCR0A |= (1 << WGM01);
-	TCCR0A &= ~(1 << WGM00);
-	TCCR0B &= ~(1 << WGM02);
-
-	// Initialise timer and select the compare match:
-	TCNT0 = 0x00;
-	OCR0A = 0xF4;
-	
-	// Enable Output Compare interrupts:
-	// TIMSK0 |= (1 << OCIE0A);
-
-	// Set clock pre-scaler to CLK/1024:
-	TCCR0B |= (1 << CS02) | (1 << CS00);
-	TCCR0B &= ~(1 << CS01);
-}
+#include "Nokia5110.h"
 
 int main(void) {
-	OutputLEDConfigure();
-	INT0_EnableOnFallingEdge();
-	TIMER0_EnableOnCTC();
-	ADC_Init();
+	//TIMER0A_EnableOnCTC();
+	//ADC_Init();
+	Nokia5110_Init();
+
 	sei();
 
     while (1) 
     {
-		
+		Nokia5110_SetCursor(0, 0);
+		Nokia5110_OutString("Hi Sarah!");
+		Nokia5110_SetCursor(0, 1);
+		Nokia5110_OutUnsignedDecimal(1);
+		Nokia5110_SetCursor(0, 2);
+		Nokia5110_OutUnsignedDecimal(69);
+		Nokia5110_SetCursor(0, 3);
+		Nokia5110_OutUnsignedDecimal(420);
+		Nokia5110_SetCursor(0, 4);
+		Nokia5110_OutUnsignedDecimal(1234);
+		Nokia5110_SetCursor(0, 5);
+		Nokia5110_OutUnsignedDecimal(69420);
     }
 }

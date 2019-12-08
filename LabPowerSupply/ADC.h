@@ -15,12 +15,12 @@
 #ifndef ADC_H_
 #define ADC_H_
 
-/*
+/*	ADC_Init
  *	@brief: Initialises the ADC 
  */
 void ADC_Init(void);
 
-/*
+/*	ADC_In
  *	@brief: Reads the value of the ADC.
  */
 void ADC_In(void);
