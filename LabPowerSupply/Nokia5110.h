@@ -36,7 +36,7 @@
 
 // Defines the back light contrast of the screen
 // Modify this value for your particular LCD
-//#define CONTRAST 0xB1
+// #define CONTRAST 0xB1
 
 static const char ASCII[][5] = {
 	 {0x00, 0x00, 0x00, 0x00, 0x00} // 20
